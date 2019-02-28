@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>汇报关系树管理</title>
+	<link rel="stylesheet" href="./frame/layui/css/layui.css"  media="all">
+	<link rel="stylesheet" type="text/css" href="./tool/easyui-1.6.2/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="./tool/easyui-1.6.2/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="./tool/easyui-1.6.2/demo/demo.css">
+	<link rel="stylesheet" type="text/css" href="./css/main.css" >
+<style type="text/css">
+
+ 
+.page-content-wrap {
+	height: 100%;
+	background: #fff;
+	padding: 20px;
+	margin: 0;
+}
+ 
+
+</style>
+</head>
+<body>
+  <div class="layui-tab page-content-wrap">
+    <ul class="layui-tab-title">
+		<li class="layui-this">汇报关系树管理</li>
+	  </ul>
+	  <div class="layui-tab-content">
+	  	<div class="layui-tab-item layui-show">
+      	  <div>
+            <div class="layui-row">
+              <div class="layui-col-xs12">
+                  <div >  
+                      <button class="layui-btn layui-btn-sm">查找组信息请点击我</button>
+                        
+                      <button class="layui-btn layui-btn-sm">查找员工信息请点击我</button>
+                        
+                      <a href="../Help/Affair/Postiontree/index.htm" target="_blank" class="layui-btn  layui-btn-sm layui-btn-normal">使用说明</a>
+                    </div> 
+              </div>
+            </div>
+            <div class="layui-row" style="bottom:0;height:100%;">
+              <div class="layui-col-xs6" >
+                <fieldset class="layui-elem-field ">
+                    <legend>当前选择组</legend>
+                    <div>
+                      <table>
+                        <tbody id="attributesId">
+                        <tr>
+                           <td>组ID<input type="text" value="" id="grpId" disabled="disabled" style="width:65px;">
+                           </td>
+                           <td colspan="3">组名<input type="text" id="grpName" disabled="disabled" style="width:300px;">
+                                <span id="" style="color:Red;display:none;">*</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>类型<input type="text" maxlength="1" id="grpType" disabled="disabled" style="width:20px;">
+                                <span id="" style="color:Red;display:none;">*</span>
+                                <span id="" style="color:Red;visibility:hidden;">*</span>
+                            </td>
+                            <td>级别<input type="text" id="grpLevel" disabled="disabled" style="width:40px;">
+                                <span id="" style="color:Red;display:none;">*</span>
+                                <span id="" style="color:Red;visibility:hidden;">*</span>
+                                <span id="" style="color:Red;visibility:hidden;">*</span>
+                            </td>
+                            <td colspan="2">部门ID<input type="text" id="deptId" disabled="disabled" style="width:100px;">
+                                <span id="" style="color:Red;visibility:hidden;">*</span>
+                                <span id="" style="color:Red;visibility:hidden;">*</span>
+                            </td>
+                          </tr>
+                          <tr>
+                              <td colspan="2">
+                                  <input type="button" id="groupUpdate" value="修改" onclick="groupUpdate(this);" 
+                                   disabled="disabled">
+                              </td>
+                          </tr>
+                          <tr>
+                              <td colspan="4">
+                                  <div id="updatePane">执行结果:<span id="updatePaneResult"></span></div>
+                              </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </fieldset>
+                  <fieldset class="layui-elem-field ">
+                    <legend>汇报关系树</legend>
+                    <div class="layui-card-body" style="bottom:0;height:100%;">
+                      <ul id="reportTree"></ul>   
+                    </div>
+                  </fieldset>
+              </div>
+              <div class="layui-col-xs6">
+                  <fieldset class="layui-elem-field ">
+                    <legend>个人详细信息</legend>
+                    
+                    <div>
+                      <table style="margin:10px">
+                        <tbody>
+                          <tr >
+                            <td>
+                               	 员工号:<input type="text" readonly="readonly" id="txtEmployeeID" style="width:60px;">
+                            </td>
+                            <td>
+                               	  姓名:<input type="text" readonly="readonly" id="txtEmployeeName" style="width:85px;">
+                            </td>
+                            <td>
+                                	职务:<input type="text" readonly="readonly" id="txtRank" style="width:150px;">
+                            </td>
+                          </tr> 
+                           <tr >
+                            <td>
+                               	 部门ID:<input type="text" readonly="readonly" id="txtDeptID" style="width:85px;">
+                            </td>
+                            <td colspan="2">
+                              	  部门名称:<input type="text" readonly="readonly" id="txtDeptName" style="width:250px;">
+                            </td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  </fieldset>
+                  <fieldset class="layui-elem-field ">
+                    <legend>组成员</legend>
+                     
+                    <div class="layui-form-item">
+                        <span id="dlEmployee" >
+                        </span>
+                    </div>   
+                  </fieldset>
+                  <fieldset class="layui-elem-field ">
+                    <legend>成员所在组还包括...</legend>
+                    <div id="memberGroups" class="layui-card-body">
+                    </div>
+                  </fieldset>
+              </div>
+            </div>
+         </div>
+	   </div>
+	  </div>
+  </div>
+<script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="./tool/easyui-1.6.2/jquery.easyui.min.js"></script>
+<script src="./frame/layui/layui.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	//生成一个汇报树
+	$('#reportTree').tree({    
+		url : "/AppOrgGroup/getReportTree",
+		//dnd : true //定义是否启用拖拽功能。 
+	    loadFilter: function(data){ 
+	        if (data.d){    
+	            return data.d;    
+	        } else {    
+	            return data;    
+	        }    
+	    },
+	    onClick: function(node){// 在用户点击的时候提示
+	    	
+			$("#grpId").attr("value",node.attributes.grpId);
+			$("#grpName").attr("value",node.attributes.grpName);
+			$("#grpType").attr("value",node.attributes.grpType);
+			$("#grpLevel").attr("value",node.attributes.grpLevel);
+			$("#deptId").attr("value",node.attributes.deptId);
+			$("#groupUpdate").prop("disabled",false);//true选中,不选中
+			/* 清空数据 */
+			$("#dlEmployee").html(""); 
+			$("#memberGroups").html("");
+		 	$("#txtEmployeeID").attr("value","");
+			$("#txtEmployeeName").attr("value","");
+			$("#txtRank").attr("value","");
+			$("#txtDeptID").attr("value","");
+			$("#txtDeptName").attr("value","");
+			
+			$.ajax({
+				dataType:'json',
+				data: {grpId : node.attributes.grpId},//组ID
+				url:"/AppOrgGroup/getReportUserTree",
+				success:function(result){
+				var _html ="";
+				 $.each(result,function(){
+				 	_html = _html+ " <span style='background-color: white;' onclick='dlEmployeeFuntion(\""+this.employee_id+"\", \""
+							+this.name+"\", \""+this.rank+"\", \""+this.dept_id+"\", \""+this.dept_name+"\", this)'> ";
+					_html = _html+" <span disabled='disabled'><input type='checkbox' disabled='disabled'></span> ";
+					_html = _html+"<a href='javascript:;' style='cursor: pointer;'>"+this.name+"("+this.employee_id+")</a></span><br>";
+					
+				 })
+					$("#dlEmployee").html( _html);
+				} 
+			});
+		}
+	});  
+});
+	  
+layui.use(['element', 'layer'], function(){
+	var layer = layui.layer,
+	element = layui.element,//Tab的切换功能，切换事件监听等，需要依赖element模块
+	$ = layui.jquery; 
+
+  //打印示范一个公告层
+  $('#groupUpdate').on('click', function(){
+      layer.open({
+           type: 1
+          ,title: '标题栏' //标题栏
+          ,closeBtn: 2
+          ,area: '300px;'
+          ,shade: 0.8
+          ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+          ,btn: ['清空', '打印']
+          ,btnAlign: 'c'
+          ,move:false //拖拽模式
+          ,content: dayin_content
+          ,success: function(layero){
+            var btn = layero.find('.layui-layer-btn1');
+            btn.find('.layui-layer-btn0').attr({
+              href: 'http://www.layui.com/'
+              ,target: '_blank'
+            });
+          }
+        });
+       
+    });
+});
+
+/* 员工号: 姓名:  职务:部门ID: 部门名称: */
+function dlEmployeeFuntion(employee_id, name, rank, dept_id, dept_name, _this){ 
+  
+    $("#dlEmployee").find("a[class='groupmembers']").removeClass("groupmembers");
+    $("#dlEmployee").find('input').prop('checked', false)  //true选中,false不选中
+    $(_this).find('a').attr("class","groupmembers");
+    $(_this).find('input').prop('checked', true)  //true选中,false不选中
+    $("#txtEmployeeID").attr("value",employee_id);
+	$("#txtEmployeeName").attr("value",name);
+	$("#txtRank").attr("value",rank);
+	$("#txtDeptID").attr("value",dept_id);
+	$("#txtDeptName").attr("value",dept_name);
+	
+	$.ajax({
+		 dataType:'json',
+		 data: {id:employee_id},//测试 
+		 url:"/AppOrgGroup/getGroupNameId",
+		 success:function(result){
+			$("#memberGroups").html("");
+			var htmlDept ="";
+			 $.each(result,function(){
+				 htmlDept = htmlDept +"<span><a href='javascript:;' style='cursor: pointer; padding: 2px; display: inline-block;'>";
+				 htmlDept = htmlDept +this;//综合管理部主管（公务票审批组）#8695
+				 htmlDept = htmlDept +"</a></span>";
+			 })
+		 	$("#memberGroups").html(htmlDept);
+		 } 
+	});
+}
+ 
+function OnGroupClicked(_this){ 
+    $("#memberGroups").find("a[class='groupmembers']").removeClass("groupmembers");
+    $(_this).attr("class","groupmembers");
+}
+</script>
+</body>
+</html>
