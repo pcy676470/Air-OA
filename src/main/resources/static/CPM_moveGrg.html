@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>移动组弹窗</title>
+	<link rel="stylesheet" href="./frame/layui/css/layui.css"  media="all">
+	<link rel="stylesheet" type="text/css" href="./tool/easyui-1.6.2/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="./tool/easyui-1.6.2/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="./tool/easyui-1.6.2/demo/demo.css">
+	<link rel="stylesheet" type="text/css" href="./css/main.css" >
+</head>
+<body>
+<div id="moveUser_CPM" >
+	<table class="layui-table" lay-skin="nob">
+  		<tbody>
+	      <tr>
+	        <td>Group ID：<input type="text" value="" id="move_PgrpId"></td>
+	        <td><button id="CPM_moveUser_fun_1" class="layui-btn layui-btn-normal layui-btn-xs">通过ID查找</button></td>
+	      </tr>
+  		</tbody>
+	</table>
+</div>
+<fieldset class="layui-elem-field ">
+  <legend>汇报关系树</legend>
+  <div class="layui-card-body" >
+    <ul id="reportTree_moveuser"></ul>   
+  </div>
+</fieldset>
+
+<fieldset class="layui-elem-field ">
+  <legend>选择的组</legend>
+  <div class="layui-card-body" >
+    <table class="layui-table" lay-skin="nob">
+  		<tbody>
+	      <tr>
+	        <td>ID：<input type="text" value="" id="move_PgrpId_2" disabled="disabled"></td>
+	        <td>名称：<input type="text" value="" id="move_PgrpName" disabled="disabled"></td>
+	        <td><button id="CPM_moveUser_fun_2" class="layui-btn layui-btn-normal layui-btn-xs">确定</button></td>
+	      </tr>
+  		</tbody>
+	</table>  
+  </div>
+</fieldset>
+ <input type="text" value="" id="move_grpId" disabled="disabled" style="display: none;">
+ 
+ <script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="./tool/easyui-1.6.2/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="./frame/layui/layui.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	
+	//生成一个汇报树
+	$('#reportTree_moveuser').tree({    
+		url : "/AppOrgGroup/getReportTree",
+	    loadFilter: function(data){ 
+	        if (data.d){    
+	            return data.d;    
+	        } else {    
+	            return data;    
+	        }    
+	    },
+	    onClick: function(node){// 在用户点击的时候提示
+	    	$('#move_PgrpId_2').val(node.id);
+			$('#move_PgrpName').val(node.text);
+		} 
+	});  
+	
+	//确定
+	$(document).on('click','#CPM_moveUser_fun_2',function(){
+		$.ajax({
+			 dataType:'json',
+			 data: {
+				 grpId : $('#move_grpId').val(),
+				 pgrpId : $("#move_PgrpId_2").val()
+			 },//测试 
+			 url:"/AppOrgGroup/moveGroup",
+			 success:function(result){
+				 if (result == "200") {
+					alert("保存成功");
+					var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+					parent.layer.close(index); //再执行关闭
+				}else{
+					alert(result);
+				}
+			 } 
+		});
+	});
+	
+	//查找
+	$(document).on('click','#CPM_moveUser_fun_1',function(){
+		//  查找一个节点并选择它
+		var node = $('#reportTree_moveuser').tree('find', $('#move_PgrpId').val());
+		if (node==null|| node=="") {
+			alert("没有输入的ID号，请重新输入...");
+			return false;
+		}
+		$('#reportTree_moveuser').tree('select', node.target);
+		$('#move_PgrpId_2').val(node.id);
+		$('#move_PgrpName').val(node.text);
+	});
+	////////
+});
+ 
+//父窗口传送参数
+function CPM_movePgrpId(id) {
+	$("#move_grpId").val(id);
+}
+
+
+</script>
+</body>
+</html>

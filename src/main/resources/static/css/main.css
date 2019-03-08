@@ -1,6 +1,5 @@
-
 html, body {
-    height: 100%;
+	height: 100%;
 }
 
 tr {
@@ -12,5 +11,6 @@ tr {
 	background-color: rgb(255, 255, 153);
 }
 
-
-
+.layui-table tbody tr:hover, .layui-table-hover {
+	background-color: #fff;
+}

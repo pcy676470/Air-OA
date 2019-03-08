@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>增加员工弹窗</title>
+	<link rel="stylesheet" href="./frame/layui/css/layui.css"  media="all">
+	<link rel="stylesheet" type="text/css" href="./css/main.css" >
+</head>
+<body>
+  	<!--查找员工信息请点击我  弹窗  -->
+<div id="addUser_CPM" >
+	<table class="layui-table" lay-skin="nob">
+  		<tbody>
+	      <tr>
+	        <td id="addUser2Grg" title="">增加用户到组：</td>
+	      </tr>
+	      <tr>
+	        <td >员工号：<input type="text" value="" id="add_userId"></td>
+	        <td ><button id="CPM_addUser_fun_1" class="layui-btn layui-btn-normal layui-btn-xs">获取员工信息</button></td>
+	      </tr>
+	      <tr>
+	        <td >姓名：<input type="text" id="add_userName" value="" disabled="disabled"></td>
+	        <td >职务：<input type="text" id="add_rank" value="" disabled="disabled"></td>
+	      </tr>
+	      <tr>
+	        <td >部门号：<input type="text" id="add_deptId" value="" disabled="disabled"></td>
+	        <td >部门名称：<input type="text" id="add_deptName" value="" disabled="disabled"></td>
+	      </tr>
+  		</tbody>
+	</table>
+</div>
+ <div>
+     <div style="position:absolute; left:30%;  padding: 9px 15px;">  
+         <button id="CPM_addUser_fun_2" class="layui-btn layui-btn-xs">保存</button>
+         <button id="CPM_addUser_fun_3" class="layui-btn layui-btn-xs">取消</button>
+     </div> 
+ </div>
+ 
+<script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
+<script src="./frame/layui/layui.js"></script>
+<script type="text/javascript">
+
+layui.use(['layer','table'], function(){
+    var $ = layui.jquery, layer = layui.layer;
+    var table = layui.table;
+    
+   //查找用户信息
+    $(document).on('click','#CPM_addUser_fun_1',function(){
+		
+    	var add_userId = $("#add_userId").val();
+    	$.ajax({
+			dataType:'json',
+			data: {
+				userId : add_userId
+				},
+			url:"/AppOrgGroup/getEmp2User",
+			success:function(result){
+				if (result=="404") {
+					alert("系统找不到工号为"+add_userId+"的信息，请到OA系统“员工管理”页面检查系统是否已有该员工基础信息。谢谢！");
+				}else{
+					$("#add_userName").val(result.name);
+    	 			$("#add_rank").val(result.rank);
+    	 			$("#add_deptId").val(result.dept_id);
+    	 			$("#add_deptName").val(result.dept_name);
+				}
+			}
+		}); 	
+    });
+   
+   //保存
+    $(document).on('click','#CPM_addUser_fun_2',function(){
+    	
+    	var userId = $("#add_userId").val();
+ 		 
+ 	 	if (userId ==null|| userId=="") {
+ 	 		 alert("请输入员工号...");
+ 	 		return false;
+		}
+ 	 	$.ajax({
+			dataType:'json',
+			data: {
+				grpId : $("#addUser2Grg").attr("title"),//appOrgGroup
+				userId : userId,
+				isDelete : '0'
+				},
+			url:"/AppOrgGroup/insertAppOrgGroupUser",
+			success:function(result){
+				if (result.code==0) {
+					alert("保存成功!");
+					var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+					parent.layer.close(index); //再执行关闭
+				}else{
+					alert(result.msg);
+				}
+			}
+		}); 	
+    });
+    
+  //取消
+    $(document).on('click','#CPM_addUser_fun_3',function(){
+    	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		parent.layer.close(index); //再执行关闭
+		
+    });
+    
+});
+
+//父窗口传送参数
+function CPM_addUser2GrgId(id) {
+	$("#addUser2Grg").attr("title",id);
+	$("#addUser2Grg").html("增加用户到组："+id);
+}
+
+
+</script>
+</body>
+</html>

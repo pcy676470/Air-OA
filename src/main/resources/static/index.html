@@ -11,21 +11,9 @@
 	<link rel="stylesheet" type="text/css" href="./tool/easyui-1.6.2/themes/icon.css">
 	<link rel="stylesheet" type="text/css" href="./tool/easyui-1.6.2/demo/demo.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css" >
-<style type="text/css">
-
- 
-.page-content-wrap {
-	height: 100%;
-	background: #fff;
-	padding: 20px;
-	margin: 0;
-}
- 
-
-</style>
 </head>
 <body>
-  <div class="layui-tab page-content-wrap">
+  <div class="layui-tab">
     <ul class="layui-tab-title">
 		<li class="layui-this">汇报关系树管理</li>
 	  </ul>
@@ -35,47 +23,39 @@
             <div class="layui-row">
               <div class="layui-col-xs12">
                   <div >  
-                      <button class="layui-btn layui-btn-sm">查找组信息请点击我</button>
+                      <button id="findgrp" class="layui-btn layui-btn-sm">查找组信息请点击我</button>
                         
-                      <button class="layui-btn layui-btn-sm">查找员工信息请点击我</button>
+                      <button id="finduser" class="layui-btn layui-btn-sm">查找员工信息请点击我</button>
                         
-                      <a href="../Help/Affair/Postiontree/index.htm" target="_blank" class="layui-btn  layui-btn-sm layui-btn-normal">使用说明</a>
+                      <a href="./instructions.html" target="_blank" class="layui-btn  layui-btn-sm layui-btn-normal">使用说明</a>
                     </div> 
               </div>
             </div>
-            <div class="layui-row" style="bottom:0;height:100%;">
+            <div class="layui-row" >
               <div class="layui-col-xs6" >
                 <fieldset class="layui-elem-field ">
                     <legend>当前选择组</legend>
                     <div>
                       <table>
-                        <tbody id="attributesId">
+                       <tbody id="attributesId">
                         <tr>
-                           <td>组ID<input type="text" value="" id="grpId" disabled="disabled" style="width:65px;">
+                           <td>组ID：<input type="text" value="" id="grpId" disabled="disabled" style="width:65px;">
                            </td>
-                           <td colspan="3">组名<input type="text" id="grpName" disabled="disabled" style="width:300px;">
-                                <span id="" style="color:Red;display:none;">*</span>
-                            </td>
+                           <td colspan="3">组名：<input type="text" id="grpName" disabled="disabled" style="width:300px;">
+                           </td>
                         </tr>
                         <tr>
-                            <td>类型<input type="text" maxlength="1" id="grpType" disabled="disabled" style="width:20px;">
-                                <span id="" style="color:Red;display:none;">*</span>
-                                <span id="" style="color:Red;visibility:hidden;">*</span>
+                            <td>类型：<input type="text" maxlength="1" id="grpType" disabled="disabled" style="width:20px;">
                             </td>
-                            <td>级别<input type="text" id="grpLevel" disabled="disabled" style="width:40px;">
-                                <span id="" style="color:Red;display:none;">*</span>
-                                <span id="" style="color:Red;visibility:hidden;">*</span>
-                                <span id="" style="color:Red;visibility:hidden;">*</span>
+                            <td>级别：<input type="text" id="grpLevel" disabled="disabled" style="width:40px;">
                             </td>
-                            <td colspan="2">部门ID<input type="text" id="deptId" disabled="disabled" style="width:100px;">
-                                <span id="" style="color:Red;visibility:hidden;">*</span>
-                                <span id="" style="color:Red;visibility:hidden;">*</span>
+                            <td colspan="2">部门ID：<input type="text" id="deptId" disabled="disabled" style="width:100px;">
                             </td>
                           </tr>
                           <tr>
-                              <td colspan="2">
-                                  <input type="button" id="groupUpdate" value="修改" onclick="groupUpdate(this);" 
-                                   disabled="disabled">
+                              <td style="padding: 9px 15px;">
+                                  <input type="button" id="groupUpdate" value="修改"  disabled="disabled" />
+                                  
                               </td>
                           </tr>
                           <tr>
@@ -89,7 +69,7 @@
                   </fieldset>
                   <fieldset class="layui-elem-field ">
                     <legend>汇报关系树</legend>
-                    <div class="layui-card-body" style="bottom:0;height:100%;">
+                    <div class="layui-card-body" >
                       <ul id="reportTree"></ul>   
                     </div>
                   </fieldset>
@@ -124,10 +104,9 @@
                     </table>
                   </div>
                   </fieldset>
-                  <fieldset class="layui-elem-field ">
+                  <fieldset class="layui-elem-field " id="div_menu_user">
                     <legend>组成员</legend>
-                     
-                    <div class="layui-form-item">
+                    <div class="layui-form-item" >
                         <span id="dlEmployee" >
                         </span>
                     </div>   
@@ -143,124 +122,373 @@
 	   </div>
 	  </div>
   </div>
+
+<!-- 组右键点击节点并显示快捷菜单 -->
+<div id="mm_grg" class="easyui-menu" style="width:120px;">
+		<div id="appendGrg" data-options="iconCls:'icon-add'">增加组</div>
+		<div id="removeitGrg" data-options="iconCls:'icon-remove'">删除选中组</div>
+		<div id="moveGrg" data-options="iconCls:'icon-redo'">移动到...</div>
+</div>
+
+
+<!-- 用户右键点击节点并显示快捷菜单 -->
+<div id="mm_user" class="easyui-menu" style="width:120px;">
+	<div id="addUser" data-options="iconCls:'icon-add'">增加新成员</div>
+	<div id="appUser" data-options="iconCls:'icon-add'">添加到...</div>
+	<div id="removeitUser" data-options="iconCls:'icon-remove'">删除</div>
+	<div id="moveUser" data-options="iconCls:'icon-redo'">移动到...</div>
+</div>
+	
 <script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="./tool/easyui-1.6.2/jquery.easyui.min.js"></script>
-<script src="./frame/layui/layui.js"></script>
+<script type="text/javascript" src="./frame/layui/layui.js"></script>
+<script type="text/javascript" src="./js/index.js"></script>
 <script type="text/javascript">
-$(document).ready(function() {
 	
-	//生成一个汇报树
-	$('#reportTree').tree({    
-		url : "/AppOrgGroup/getReportTree",
-		//dnd : true //定义是否启用拖拽功能。 
-	    loadFilter: function(data){ 
-	        if (data.d){    
-	            return data.d;    
-	        } else {    
-	            return data;    
-	        }    
-	    },
-	    onClick: function(node){// 在用户点击的时候提示
-	    	
-			$("#grpId").attr("value",node.attributes.grpId);
-			$("#grpName").attr("value",node.attributes.grpName);
-			$("#grpType").attr("value",node.attributes.grpType);
-			$("#grpLevel").attr("value",node.attributes.grpLevel);
-			$("#deptId").attr("value",node.attributes.deptId);
-			$("#groupUpdate").prop("disabled",false);//true选中,不选中
-			/* 清空数据 */
-			$("#dlEmployee").html(""); 
-			$("#memberGroups").html("");
-		 	$("#txtEmployeeID").attr("value","");
-			$("#txtEmployeeName").attr("value","");
-			$("#txtRank").attr("value","");
-			$("#txtDeptID").attr("value","");
-			$("#txtDeptName").attr("value","");
-			
+layui.use(['element', 'layer'], function(){
+	var $ = layui.jquery;
+	var layer = layui.layer;
+	
+	$( "#div_menu_user" ).contextmenu(function(e) {
+         e.preventDefault();  //阻止默认行为，阻止掉浏览器系统菜单
+         $('#mm_user').menu('show',{   //执行自定义鼠标左键菜单
+             left:e.pageX,  //菜单位置
+             top:e.pageY    //菜单位置
+         })
+    });
+	
+	//  增加新用户
+	$('#addUser').on('click', function(){
+		var node = $('#reportTree').tree('getSelected');
+		if (node==null|| node==""|| node.id==null|| node.id=="") {
+			 alert("请先选择一个组，才能增加用户");
+			 return false;
+		}
+		layer.open({
+			  type: 2
+			  ,title: '增加新组员到组...' //不显示标题栏
+			  ,closeBtn: 1
+			  ,area: ['60%', '75%']//宽高
+			  ,skin: 'layui-layer-rim' //加上边框
+			  ,id: 'LAY_layuipro_user_a1' //设定一个id，防止重复弹出
+			  ,resize: false//拖拽模式
+			  ,btnAlign: 'c'
+			  ,move: false
+			  ,moveType: 1 //拖拽模式，0或者1
+			  ,content: ['/CPM_addUser.html', 'no']//禁滚动条
+			  ,success: function (layero, index) {
+                    // 获取子页面的iframe
+                    var iframe = window['layui-layer-iframe' + index];
+                    // 向子页面的全局函数child传参
+                    iframe.CPM_addUser2GrgId(node.id);
+               }
+	    });
+	 });
+	
+	//  添加选择的用户到多个组
+	$('#appUser').on('click', function(){
+		
+		var app_userIdNode = $("#div_menu_user").find("a[class='groupmembers']:first");
+	    var app_userId = $(app_userIdNode).attr("id");
+	    if (app_userId==""|| app_userId==undefined) {
+			alert("请先选择一个组员，才可以进行增加操作...");
+			return false;
+		}
+		
+		layer.open({
+			  type: 2
+			  ,title: '添加员工到其它组...' //不显示标题栏
+			  ,closeBtn: 1
+			  ,area: ['60%', '75%']//宽高
+			  ,skin: 'layui-layer-rim' //加上边框
+			  ,id: 'LAY_layuipro_user_p1' //设定一个id，防止重复弹出
+			  ,resize: false//拖拽模式
+			  ,btnAlign: 'c'
+			  ,move: false
+			  ,moveType: 1 //拖拽模式，0或者1
+			  ,content: '/CPM_appUser.html'
+			  ,success: function (layero, index) {
+                    // 获取子页面的iframe
+                    var iframe = window['layui-layer-iframe' + index];
+                    // 向子页面的全局函数child传参
+                    iframe.CPM_appUserId(app_userId);
+               }
+	    });
+	 });
+	
+//  删除用户
+	$('#removeitUser').on('click', function(){
+	   var removeitUserNode = $("#div_menu_user").find("a[class='groupmembers']:first");
+	   var add_userId = $(removeitUserNode).attr("id");
+	    if (add_userId==""|| add_userId==undefined) {
+			alert("请选择用户...");
+			return false;
+		}
+	   var value = confirm("确认需要从当前组删除组员："+removeitUserNode.html());
+	   if (value) {//
 			$.ajax({
 				dataType:'json',
-				data: {grpId : node.attributes.grpId},//组ID
-				url:"/AppOrgGroup/getReportUserTree",
+				data: {
+					grpId :$('#reportTree').tree('getSelected').id,
+					userId : add_userId
+					},
+				url:"/AppOrgGroup/deleteGroupUser", 
 				success:function(result){
-				var _html ="";
-				 $.each(result,function(){
-				 	_html = _html+ " <span style='background-color: white;' onclick='dlEmployeeFuntion(\""+this.employee_id+"\", \""
-							+this.name+"\", \""+this.rank+"\", \""+this.dept_id+"\", \""+this.dept_name+"\", this)'> ";
-					_html = _html+" <span disabled='disabled'><input type='checkbox' disabled='disabled'></span> ";
-					_html = _html+"<a href='javascript:;' style='cursor: pointer;'>"+this.name+"("+this.employee_id+")</a></span><br>";
-					
-				 })
-					$("#dlEmployee").html( _html);
-				} 
-			});
+					if (result.code==0) {
+						//alert("删除成功!");
+						$(removeitUserNode).parent().remove();
+					}else{
+						alert(result.msg);
+					}
+				}
+			}); 	
+		} 
+		
+	 });
+	 
+//  移动用户
+	$('#moveUser').on('click', function(){
+		
+		var moveUserNode = $("#div_menu_user").find("a[class='groupmembers']:first");
+		var move_userId = $(moveUserNode).attr("id");
+	    if (move_userId==""|| move_userId==undefined) {
+			alert("请先选择一个组员，才可以进行增加操作...");
+			return false;
 		}
-	});  
-});
-	  
-layui.use(['element', 'layer'], function(){
-	var layer = layui.layer,
-	element = layui.element,//Tab的切换功能，切换事件监听等，需要依赖element模块
-	$ = layui.jquery; 
-
-  //打印示范一个公告层
-  $('#groupUpdate').on('click', function(){
-      layer.open({
-           type: 1
-          ,title: '标题栏' //标题栏
-          ,closeBtn: 2
-          ,area: '300px;'
-          ,shade: 0.8
-          ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
-          ,btn: ['清空', '打印']
-          ,btnAlign: 'c'
-          ,move:false //拖拽模式
-          ,content: dayin_content
-          ,success: function(layero){
-            var btn = layero.find('.layui-layer-btn1');
-            btn.find('.layui-layer-btn0').attr({
-              href: 'http://www.layui.com/'
-              ,target: '_blank'
-            });
-          }
-        });
-       
-    });
-});
-
-/* 员工号: 姓名:  职务:部门ID: 部门名称: */
-function dlEmployeeFuntion(employee_id, name, rank, dept_id, dept_name, _this){ 
-  
-    $("#dlEmployee").find("a[class='groupmembers']").removeClass("groupmembers");
-    $("#dlEmployee").find('input').prop('checked', false)  //true选中,false不选中
-    $(_this).find('a').attr("class","groupmembers");
-    $(_this).find('input').prop('checked', true)  //true选中,false不选中
-    $("#txtEmployeeID").attr("value",employee_id);
-	$("#txtEmployeeName").attr("value",name);
-	$("#txtRank").attr("value",rank);
-	$("#txtDeptID").attr("value",dept_id);
-	$("#txtDeptName").attr("value",dept_name);
+		layer.open({
+			  type: 2
+			  ,title: '移动组员到组...' //不显示标题栏
+			  ,closeBtn: 1
+			  ,area: ['60%', '75%']//宽高
+			  ,skin: 'layui-layer-rim' //加上边框
+			  ,id: 'LAY_layuipro_user_m1' //设定一个id，防止重复弹出
+			  ,resize: false//拖拽模式
+			  ,btnAlign: 'c'
+			  ,move: false
+			  ,moveType: 1 //拖拽模式，0或者1
+			  ,content: '/CPM_moveUser.html'
+			  ,success: function (layero, index) {
+                    // 获取子页面的iframe
+                    var iframe = window['layui-layer-iframe' + index];
+                    // 向子页面的全局函数child传参
+                    iframe.CPM_moveUser2GrgId(move_userId, $("#grpId").val());
+                    
+               }
+	    });
+		
+	 });
+	 
+	 //=============================================///
+	 //=============================================///
+	 //=============================================///
+	//  增加组
+	$('#appendGrg').on('click', function(){
+		var node = $('#reportTree').tree('getSelected');
+		var nodeId = "";
+		if (node!=null&& node!="") {
+			nodeId = node.id;
+		}
+		layer.open({
+			  type: 2
+			  ,title: '增加组....' //不显示标题栏
+			  ,closeBtn: 1
+			  ,area: ['60%', '75%']//宽高
+			  ,skin: 'layui-layer-rim' //加上边框
+			  ,id: 'LAY_layuipro_grp_a1' //设定一个id，防止重复弹出
+			  ,resize: false//拖拽模式
+			  ,btnAlign: 'c'
+			  ,move: false
+			  ,moveType: 1 //拖拽模式，0或者1
+			  ,content: ['/CPM_addGrg.html', 'no']//禁滚动条
+			  ,success: function (layero, index) {
+                    // 获取子页面的iframe
+                    var iframe = window['layui-layer-iframe' + index];
+                    // 向子页面的全局函数child传参
+                    iframe.CPM_addGrg_pgrpId(nodeId);
+               }
+	    });
+	 });
 	
-	$.ajax({
-		 dataType:'json',
-		 data: {id:employee_id},//测试 
-		 url:"/AppOrgGroup/getGroupNameId",
-		 success:function(result){
-			$("#memberGroups").html("");
-			var htmlDept ="";
-			 $.each(result,function(){
-				 htmlDept = htmlDept +"<span><a href='javascript:;' style='cursor: pointer; padding: 2px; display: inline-block;'>";
-				 htmlDept = htmlDept +this;//综合管理部主管（公务票审批组）#8695
-				 htmlDept = htmlDept +"</a></span>";
-			 })
-		 	$("#memberGroups").html(htmlDept);
-		 } 
+//  删除组
+	$('#removeitGrg').on('click', function(){
+		var value = confirm("删除组");
+		if (value) {//
+			$.ajax({
+				dataType:'json',
+				data: {
+						grpId :$('#reportTree').tree('getSelected').id
+					},
+				url:"/AppOrgGroup/deleteGroup",
+				success:function(result){
+					if (result.code==0) {
+						//alert("删除成功!");
+						var node = $('#reportTree').tree('getSelected');
+						$('#reportTree').tree('remove', node.target);
+					}else{
+						alert(result.msg);
+					}
+				}
+			}); 	
+		} 
+	 });
+	 
+	//  移动组
+	$('#moveGrg').on('click', function(){
+		var node = $('#reportTree').tree('getSelected');
+		if (node==null|| node=="") {
+			alert("请先选择一个组,然后再移动该组...");
+			return false;
+		}
+		layer.open({
+			  type: 2
+			  ,title: '移动组...' //不显示标题栏
+			  ,closeBtn: 1
+			  ,area: ['60%', '75%']//宽高
+			  ,skin: 'layui-layer-rim' //加上边框
+			  ,id: 'LAY_layuipro_grp_m1' //设定一个id，防止重复弹出
+			  ,resize: false//拖拽模式
+			  ,btnAlign: 'c'
+			  ,move: false
+			  ,moveType: 1 //拖拽模式，0或者1
+			  ,content: '/CPM_moveGrg.html' //禁滚动条
+			  ,success: function (layero, index) {
+                    // 获取子页面的iframe
+                    var iframe = window['layui-layer-iframe' + index];
+                    // 向子页面的全局函数child传参
+                    iframe.CPM_movePgrpId(node.id);
+               }
+	    });
+	 });
+	
+	
+	//////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+	//查找组信息请点击我 
+	$('#findgrp').on('click', function(){
+		layer.open({
+		  type: 2
+		  ,title: '查找组....' //不显示标题栏
+		  ,closeBtn: 1
+		  ,area: ['60%', '75%']//宽高
+		  ,skin: 'layui-layer-rim' //加上边框
+		  ,id: 'LAY_layuipro_grp_f1' //设定一个id，防止重复弹出
+		  ,resize: false//拖拽模式
+		  ,btnAlign: 'c'
+		  ,move: false
+		  ,moveType: 1 //拖拽模式，0或者1
+		  ,content: '/tree_CPM_grg.html'
+		  
+    	});
+	 });
+	 
+	//查找员工信息请点击我
+	$('#finduser').on('click', function(){
+		layer.open({
+			  type: 2
+			  ,title: '用户查找....' //不显示标题栏
+			  ,closeBtn: 1
+			  ,area: ['60%', '75%']//宽高
+			  ,skin: 'layui-layer-rim' //加上边框
+			  ,id: 'LAY_layuipro_user_f1' //设定一个id，防止重复弹出
+			  ,resize: false//拖拽模式
+			  ,btnAlign: 'c'
+			  ,move: false
+			  ,moveType: 1 //拖拽模式，0或者1
+			  ,content: '/tree_CPM_user.html'
+			  
+	    });
+	 });
+	
+  //修改组弹窗
+  $('#groupUpdate').on('click', function(){
+		layer.open({
+		  type: 2
+		  ,title: '修改组' //不显示标题栏
+		  ,closeBtn: 1
+		  ,area: '500px'//宽高
+		  ,skin: 'layui-layer-rim' //加上边框
+		  ,id: 'LAY_layuipro_u1' //设定一个id，防止重复弹出
+		  ,resize: false//拖拽模式
+		  ,btn: ['保存', '关闭']
+		  ,btnAlign: 'c'
+		  ,move: false
+		  ,moveType: 1 //拖拽模式，0或者1
+		  ,content: ['/CPM_updataGrg.html', 'no']//禁滚动条
+		  ,success: function (layero, index) {
+            // 获取子页面的iframe
+            var iframe = window['layui-layer-iframe' + index];
+            // 向子页面的全局函数child传参
+            iframe.updataGrg_CPM_data($("#grpId").val(), $("#grpName").val(), $("#grpType").val(),
+            		$("#grpLevel").val(), $("#deptId").val());
+       		}
+		
+		 ,btn1: function(index, layero){ //按钮【按钮一】的回调
+			// 获取子页面的iframe
+			var iframe = window['layui-layer-iframe' + index];
+			// 向子页面的获取参数
+			var updataGrg_CPM_grpId = iframe.$("#updataGrg_CPM_grpId").val();
+			var updataGrg_CPM_grpName = iframe.$("#updataGrg_CPM_grpName").val();
+			var updataGrg_CPM_grpType =  iframe.$("#updataGrg_CPM_grpType").val();
+			var updataGrg_CPM_grpLevel = iframe.$("#updataGrg_CPM_grpLevel").val();
+			var updataGrg_CPM_deptId = iframe.$("#updataGrg_CPM_deptId").val();	
+	 		 
+	 	 	if (updataGrg_CPM_grpName ==null|| updataGrg_CPM_grpName=="") {
+	 	 		 alert("组名不可以为空!");
+	 	 		 return false;
+			}
+	 	 	if (updataGrg_CPM_grpType ==null|| updataGrg_CPM_grpType=="") {
+	 	 		 alert("类型不可以为空!");
+	 	 		return false;
+			}
+	 	 	if (updataGrg_CPM_grpLevel ==null|| updataGrg_CPM_grpLevel=="") {
+	 	 		 alert("级别不可以为空!");
+	 	 		return false;
+			}
+	 	 	if (updataGrg_CPM_deptId ==null|| updataGrg_CPM_deptId=="") {
+	 	 		 alert("部门ID不可以为空!");
+	 	 		return false;
+			}
+	 	 	$.ajax({
+				dataType:'json',
+				data: {
+					grpId : updataGrg_CPM_grpId,
+					grpName : updataGrg_CPM_grpName,
+					grpType : updataGrg_CPM_grpType,
+					grpLevel : updataGrg_CPM_grpLevel, 
+					deptId : updataGrg_CPM_deptId
+					},
+				url:"/AppOrgGroup/updateGroup",
+				success:function(result){
+					if (result=="200") {
+						alert("修改成功...");
+						$('#reportTree').tree('reload');//重新载入树控件数据。
+						layer.close(layer.index);//关闭
+					}
+				}
+			}); 	
+		  }  
+    	});
+	});
+});
+
+//tree查找一个节点并选择它
+function treeFind(id){ 
+	var node = $('#reportTree').tree('find', id);
+	$('#reportTree').tree('select', node.target);
+	$('#reportTree').tree('expandTo', node.target);
+	treeonClickFunction(node);//加载数据
+}
+
+//tree查找一个节点并选择它
+function treeAppend(data){ 
+	var node = $('#reportTree').tree('getSelected');
+	$('#reportTree').tree('append', {
+		parent: (node?node.target:null),
+		data: data
 	});
 }
- 
-function OnGroupClicked(_this){ 
-    $("#memberGroups").find("a[class='groupmembers']").removeClass("groupmembers");
-    $(_this).attr("class","groupmembers");
-}
+
 </script>
 </body>
 </html>

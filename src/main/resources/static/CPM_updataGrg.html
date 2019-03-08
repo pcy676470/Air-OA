@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>修改组弹窗</title>
+	<link rel="stylesheet" href="./frame/layui/css/layui.css"  media="all">
+	<link rel="stylesheet" type="text/css" href="./css/main.css" >
+</head>
+<body>
+<!-- 修改弹窗 -->  
+<div id="updataGrg_CPM"> 
+	<table class="layui-table" lay-skin="nob">
+  		<tbody>
+	      <tr>
+	        <td>组ID：<input type="text" disabled="disabled" id="updataGrg_CPM_grpId" value="" style="width:65px;"></td>
+	        <td colspan="3">组名：<input type="text" id="updataGrg_CPM_grpName" value="" style="width:280px;"></td>
+	      </tr>
+	      <tr>
+	        <td>类型：<input type="text" maxlength="1" id="updataGrg_CPM_grpType" value="" style="width:20px;"></td>
+	        <td>级别：<input type="text" id="updataGrg_CPM_grpLevel" value="" style="width:45px;"></td>
+	        <td colspan="2">部门ID：<input type="text" id="updataGrg_CPM_deptId" value="" style="width:100px;">
+	        </td>
+	      </tr>
+  		</tbody>
+	</table>
+</div>
+ 
+<script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
+<script src="./frame/layui/layui.js"></script>
+<script type="text/javascript">
+    
+//父窗口传送参数
+function updataGrg_CPM_data(updataGrg_CPM_grpId, updataGrg_CPM_grpName, updataGrg_CPM_grpType, updataGrg_CPM_grpLevel, updataGrg_CPM_deptId) {
+	$("#updataGrg_CPM_grpId").val(updataGrg_CPM_grpId);
+	$("#updataGrg_CPM_grpName").val(updataGrg_CPM_grpName);
+	$("#updataGrg_CPM_grpType").val(updataGrg_CPM_grpType);
+	$("#updataGrg_CPM_grpLevel").val(updataGrg_CPM_grpLevel);
+	$("#updataGrg_CPM_deptId").val(updataGrg_CPM_deptId);
+}
+
+</script>
+</body>
+</html>
