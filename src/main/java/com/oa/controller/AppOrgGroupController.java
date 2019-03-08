@@ -47,6 +47,7 @@ public class AppOrgGroupController {
 	@RequestMapping("/getGroupNameId")
 	public List<String> getGroupNameId(String id){
 		
+		
 		List<String> groupNameIdList = appOrgGroupDao.getGroupNameId(id);
 		return groupNameIdList;
 	}
