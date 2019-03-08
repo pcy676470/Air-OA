@@ -43,11 +43,17 @@ public class AppOrgGroupController {
 		return employeesDeptVo;
 	}
 	
+	/**
+	 * @param id
+	 * @return
+	 * @Description 方法描述:  
+	 * @author liang
+	 * @date 时间: 2019年3月8日 下午3:46:57
+	 */
 	@ResponseBody
 	@RequestMapping("/getGroupNameId")
 	public List<String> getGroupNameId(String id){
-		
-		
+		/////////////
 		List<String> groupNameIdList = appOrgGroupDao.getGroupNameId(id);
 		return groupNameIdList;
 	}
